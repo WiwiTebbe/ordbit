@@ -355,7 +355,8 @@ function mooseSVG(mood){
   return '<svg class="moose" viewBox="0 0 160 160" aria-hidden="true" focusable="false">'+
     antlerAndEar()+
     '<g transform="translate(160 0) scale(-1 1)">'+antlerAndEar()+'</g>'+
-    '<rect x="60" y="98" width="40" height="30" rx="8" fill="'+MC.ear+'"/>'+
+    '<path d="M40 160 C40 141 57 129 80 129 C103 129 120 141 120 160 Z" fill="'+MC.ear+'"/>'+
+    '<rect x="60" y="98" width="40" height="34" rx="8" fill="'+MC.ear+'"/>'+
     '<ellipse cx="80" cy="72" rx="40" ry="38" fill="'+MC.fur+'"/>'+
     '<ellipse cx="80" cy="100" rx="31" ry="21" fill="'+MC.muzzle+'"/>'+
     '<ellipse cx="70" cy="96" rx="4.5" ry="3.2" fill="'+MC.line+'"/><ellipse cx="90" cy="96" rx="4.5" ry="3.2" fill="'+MC.line+'"/>'+
@@ -363,7 +364,8 @@ function mooseSVG(mood){
     '<path d="M55 53 Q63 49 71 52" fill="none" stroke="'+MC.line+'" stroke-width="4.5" stroke-linecap="round"'+(bl?' transform="'+bl+'"':'')+'/>'+
     '<path d="M89 52 Q97 49 105 53" fill="none" stroke="'+MC.line+'" stroke-width="4.5" stroke-linecap="round"'+(br?' transform="'+br+'"':'')+'/>'+
     mouth+
-    '<rect x="92" y="124" width="14" height="28" rx="5" fill="'+MC.scarf+'"/><rect x="92" y="140" width="14" height="3.5" fill="'+MC.stripe+'"/>'+
+    '<g transform="rotate(-10 98 127)"><rect x="91" y="124" width="14" height="26" rx="4" fill="'+MC.scarf+'"/><rect x="91" y="140" width="14" height="3.5" fill="'+MC.stripe+'"/>'+
+    '<path d="M93.5 150 v4.5 M98 150 v4.5 M102.5 150 v4.5" stroke="'+MC.scarf+'" stroke-width="2.2" stroke-linecap="round"/></g>'+
     '<rect x="44" y="117" width="72" height="16" rx="8" fill="'+MC.scarf+'"/><rect x="46" y="123.5" width="68" height="3.5" fill="'+MC.stripe+'"/>'+
     '</svg>';
 }
