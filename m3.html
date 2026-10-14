@@ -173,7 +173,7 @@ button{cursor:pointer}
 .agent-fig[data-anim="dance"] .m-arm-l{transform:rotate(150deg);animation:ma-dance-l 1.5s ease-in-out both}
 .agent-fig[data-anim="dance"] .m-arm-r{transform:rotate(95deg);animation:ma-dance-r 1.5s ease-in-out both}
 .agent-fig[data-anim="star"] .moose{animation:mb-star 1.3s ease-in-out both}
-.agent-fig[data-anim="star"] .m-arm{transform:rotate(110deg);animation:ma-star 1.3s ease-in-out both}
+.agent-fig[data-anim="star"] .m-arm{transform:rotate(126deg);animation:ma-star 1.3s ease-in-out both}
 .agent-fig[data-anim="point"] .moose{animation:mb-point 1.4s ease-in-out both}
 .agent-fig[data-anim="point"] .m-head{transform:rotate(6deg);animation:mh-point 1.4s ease-in-out both}
 .agent-fig[data-anim="point"] .m-arm-r{transform:rotate(132deg);animation:ma-point 1.4s ease-in-out both}
@@ -207,9 +207,9 @@ button{cursor:pointer}
 @keyframes mh-dance{0%,32%,64%{transform:rotate(0)}15%{transform:rotate(6deg)}48%{transform:rotate(-6deg)}80%,100%{transform:rotate(6deg)}}
 @keyframes ma-dance-l{0%{transform:rotate(0)}15%,64%{transform:rotate(150deg)}32%{transform:rotate(95deg)}48%{transform:rotate(80deg)}80%{transform:rotate(132deg)}100%{transform:rotate(150deg)}}
 @keyframes ma-dance-r{0%{transform:rotate(0)}15%{transform:rotate(80deg)}32%{transform:rotate(120deg)}48%{transform:rotate(150deg)}64%{transform:rotate(85deg)}80%{transform:rotate(140deg)}100%{transform:rotate(95deg)}}
-/* star: two jumping jacks, arms flung up on each hop; ends with the arms spread wide */
+/* star: two jumping jacks, arms flung up on each hop; ends in a wide V (well above shrug's sideways spread) */
 @keyframes mb-star{0%,100%{transform:translateY(0) scale(1,1)}10%{transform:translateY(2%) scale(1.05,.94)}25%,55%{transform:translateY(-9%) scale(.97,1.02)}40%,72%{transform:translateY(1%) scale(1.06,.94)}86%{transform:translateY(-2%) scale(1,1)}}
-@keyframes ma-star{0%,10%{transform:rotate(0)}25%,55%{transform:rotate(150deg)}40%,72%{transform:rotate(85deg)}86%{transform:rotate(125deg)}100%{transform:rotate(110deg)}}
+@keyframes ma-star{0%,10%{transform:rotate(0)}25%,55%{transform:rotate(150deg)}40%,72%{transform:rotate(85deg)}86%{transform:rotate(136deg)}100%{transform:rotate(126deg)}}
 /* point: lean towards the speech bubble and tap at it (raised enough that the hoof stays clear of the bubble's tail) */
 @keyframes mb-point{0%,100%{transform:translateX(0) rotate(0)}30%{transform:translateX(0) rotate(3deg)}70%{transform:translateX(0) rotate(2deg)}}
 @keyframes mh-point{0%{transform:rotate(0)}25%,60%{transform:rotate(7deg)}100%{transform:rotate(6deg)}}
