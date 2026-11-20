@@ -290,6 +290,7 @@ function resolveCond(){
 }
 var COND = resolveCond();
 var AVATAR = COND==='A';
+var VERBAL = AVATAR;   // verbal social cues (TEXT_A, EMPATHY_A) only in condition A, together with the avatar
 
 /* =====================================================================
    CONTENT: identical in both conditions.
@@ -326,14 +327,27 @@ var LESSON = [
    full:'Hej, jag heter Anna.', tip:'Swedes say *jag heter …*, literally “I am called …”.'}
 ];
 
-/* Messages: identical wording in both conditions, no first-person agent language ("I", "we"),
-   so the only difference between A and B is who presents the text. */
+/* Messages. TEXT is shown in condition B, and in condition A wherever TEXT_A has no entry.
+   It uses no first-person agent language ("I", "we").
+   Condition A adds verbal social cues after Feine et al. (2019) to what Olle says: self-introduction and
+   greeting (intro, same information as in B, no extra Swedish words), empathy and self-disclosure after a wrong answer, humour and self-disclosure at halfway,
+   thanking and farewell (summary). The task feedback itself stays identical in both conditions: the same
+   praise after a correct answer, the same correct answer, explanation and tip after a wrong one. So both
+   groups get the same information about their performance; only the social framing differs. */
 var TEXT = {
   intro:   {title:'*Välkommen!*', body:['*Välkommen* is Swedish for “welcome”. In the next few minutes you will learn your first Swedish words.','First you see a few new words, then you practise them.'], button:'Start lesson'},
   words:   {title:'New words', sub:'Read them carefully. You will practise them next.', button:'Practise these words'},
   halfway: {title:'Halfway there!', body:function(n){ return ['You have already practised '+n+' new Swedish words. Keep going!']; }, button:'Continue'},
   summary: {title:'Lesson finished', body:function(c,n){ return ['Well done! You answered '+c+' of '+n+' exercises correctly.']; }, label:'Your new words'}
 };
+var TEXT_A = {
+  intro:   {title:'*Välkommen!* I’m Olle.', body:['*Välkommen* is Swedish for “welcome”. I’m a moose from Sweden, and in the next few minutes I’ll help you learn your first Swedish words.','First I’ll show you a few new words, then you practise them.'], button:'Start lesson'},
+  halfway: {title:'Halfway there!', body:function(n){ return ['You have already practised '+n+' new Swedish words. Keep going!','Between you and me: after this many new words, even a moose needs a short breather.']; }, button:'Continue'},
+  summary: {title:'Lesson finished', body:function(c,n){ return ['Well done! You answered '+c+' of '+n+' exercises correctly.','Thank you for learning with me today. *Hej då*, that’s Swedish for “goodbye”!']; }, label:'Your new words'}
+};
+/* Condition A only: Olle's line after a wrong answer, before the correct answer (taken in this fixed order). */
+var EMPATHY_A = ['Don’t worry, this one is tricky.','Mistakes are part of learning, mine included.','I mixed these up at first too.','No problem, let’s look at it together.'];
+function txt(key){ return (VERBAL && TEXT_A[key]) ? TEXT_A[key] : TEXT[key]; }
 var KICKER = {meaning:'Meaning', swedish:'In Swedish', picture:'Picture', tf:'True or false', cloze:'Fill the gap', type:'Write it'};
 var PRAISE = ['Correct!','Well done!','Exactly!','That’s right!','Very good!'];
 /* Avatar gestures (condition A only), taken in this fixed order so two feedbacks in a row never repeat a gesture.
@@ -351,7 +365,7 @@ LESSON.forEach(function(it){
 });
 FLOW.push({t:'summary'});
 
-var S = {step:0, praise:0, anim:{ok:0, bad:0}, t0:0, cool:0, awaitNext:false, keyPick:null, fbShown:0, result:null,
+var S = {step:0, praise:0, empathy:0, anim:{ok:0, bad:0}, t0:0, cool:0, awaitNext:false, keyPick:null, fbShown:0, result:null,
          L:{c:0, n:0, seq:'', words:[], done:0, t0:0, t1:0, fb:[],
             total:LESSON.filter(function(i){ return i.kind!=='words' && i.kind!=='halfway'; }).length}};
 
@@ -479,7 +493,7 @@ function renderMessage(o){
   if(o.button) footerButton(o.button, o.onNext||next);
 }
 function renderIntro(){
-  renderMessage({mood:'happy', anim:'hello', top:'brand', title:TEXT.intro.title, body:TEXT.intro.body, button:TEXT.intro.button,
+  renderMessage({mood:'happy', anim:'hello', top:'brand', title:txt('intro').title, body:txt('intro').body, button:txt('intro').button,
     onNext:function(){ S.t0=Date.now(); next(); }});
 }
 function renderWords(st){
@@ -494,11 +508,11 @@ function renderWords(st){
   footerButton(TEXT.words.button, next);
 }
 function renderHalfway(){
-  renderMessage({mood:'happy', anim:'celebrate', top:'lesson', title:TEXT.halfway.title, body:TEXT.halfway.body(S.L.words.length), button:TEXT.halfway.button});
+  renderMessage({mood:'happy', anim:'celebrate', top:'lesson', title:txt('halfway').title, body:txt('halfway').body(S.L.words.length), button:txt('halfway').button});
 }
 /* Last screen of the app: no button, nothing follows. */
 function renderSummary(){
-  var T=TEXT.summary;
+  var T=txt('summary');
   var extra='<div class="label">'+esc(T.label)+'</div><div class="word-chips">'+
     S.L.words.map(function(w){ return '<span class="word-chip" lang="sv">'+esc(w)+'</span>'; }).join('')+'</div>';
   renderMessage({mood:'happy', anim:'celebrate', top:'lesson', title:T.title, body:T.body(S.L.c, S.L.n), extra:extra});
@@ -639,6 +653,7 @@ function feedback(ex, ok, info){
     return {tone:'ok', mood:'happy', anim:okAnim, head:headTxt, body:explainOf(ex), extra: info.typo ? 'Watch the spelling: *'+ex.answer+'*.' : ''};
   }
   var body = ex.kind==='tf' ? 'This statement is '+(ex.answer ? 'true' : 'false')+'. '+ex.explain : 'Correct answer: '+answerDisplay(ex);
+  if(VERBAL){ body = EMPATHY_A[S.empathy++ % EMPATHY_A.length]+' '+body; }
   return {tone:'bad', mood:'encourage', anim:ANIM.bad[S.anim.bad++ % ANIM.bad.length], head:'Not quite.', body:body, extra: ex.tip ? 'Tip: '+ex.tip : ''};
 }
 function complete(st, ok, info){
@@ -674,7 +689,7 @@ document.addEventListener('keydown', function(e){
 });
 
 $('brandName').textContent=CONFIG.APP_NAME;
-window.__ordbit = {S:S, FLOW:FLOW, COND:COND, result:function(){ return S.result; }, setCool:function(ms){ COOL.ms=ms; }};
+window.__ordbit = {S:S, FLOW:FLOW, COND:COND, VERBAL:VERBAL, result:function(){ return S.result; }, setCool:function(ms){ COOL.ms=ms; }};
 go();
 })();
 </script>
